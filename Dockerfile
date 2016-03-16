@@ -1,4 +1,4 @@
-FROM centos:7
+FROM colinsung/c7-systemd
 
 RUN yum -y update && yum -y groupinstall core && yum -y groupinstall base && yum -y install epel-release
 RUN yum -y install automake gcc gcc-c++ ncurses-devel openssl-devel libxml2-devel unixODBC-devel \
@@ -26,4 +26,6 @@ RUN cd /usr/src/pjproject-* && ./configure --prefix=/usr --libdir=/usr/lib64 --e
 RUN cd /usr/src/asterisk-13.* && make distclean && ./configure --libdir=/usr/lib64 && make menuselect.makeopts && menuselect/menuselect --enable cdr_mysql --enable EXTRA-SOUNDS-EN-GSM menuselect.makeopts
 RUN adduser asterisk -s /sbin/nologin -c "Asterisk User"
 RUN cd /usr/src/asterisk-13.* && make && make install && chown -R asterisk. /var/lib/asterisk
+RUN chown asterisk. /var/run/asterisk
 RUN cd /usr/src && git clone -b release/13.0 https://github.com/FreePBX/framework.git freepbx
+RUN yum -y install php-phpunit-PHPUnit
